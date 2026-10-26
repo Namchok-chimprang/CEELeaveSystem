@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ใบลาออนไลน์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anuphan:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap">
+<script src="https://static.line-scdn.net/liff/edge/2/sdk.js" charset="utf-8"></script>
+<script>
+/* ======== ตั้งค่า 2 บรรทัดนี้ (ดูคู่มือ README) ======== */
+const CONFIG = {
+  LIFF_ID: '2012143522-ukR26Wyn',
+  API_URL: 'https://script.google.com/macros/s/AKfycbw3_32noLnMG70jAMvBRdI6eMaZxZ0FSA9fFPSCuvZAgT3fSa1zmfgTWsBZH21cNIxh/exec',
+};
+</script>
+<style>
+:root{
+  --bg:#F2F4F7; --surface:#FFFFFF; --sunk:#E9EDF3; --ink:#18202E; --muted:#5A6476; --line:#D9DFE8;
+  --accent:#1E4A86; --accent-ink:#FFFFFF; --band:#152B4E; --band-ink:#EEF3FB; --band-muted:#A9BAD6;
+  --sick:#0E7469; --personal:#6A3BC4; --vacation:#B05A06; --ok:#157A3C; --bad:#B42318; --wait:#A16207;
+  --display:"Anuphan","Sarabun","Leelawadee UI","Thonburi",system-ui,sans-serif;
+  --body:"Sarabun","Leelawadee UI","Thonburi",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){:root{
+  --bg:#0F131A; --surface:#171C26; --sunk:#1E2430; --ink:#E7EBF2; --muted:#9AA4B6; --line:#2B3342;
+  --accent:#86ADEB; --accent-ink:#0F1A2E; --band:#0B1426; --band-ink:#E6EDF8; --band-muted:#8EA0BF;
+  --sick:#3CCFBE; --personal:#B39BFA; --vacation:#F2B054; --ok:#55D88A; --bad:#F7837A; --wait:#F2C94C; color-scheme:dark }}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-text-size-adjust:100%}
+[hidden]{display:none!important}
+.wrap{max-width:620px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.25;text-wrap:balance}
+h2{font-size:1.15rem;font-weight:600}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+header{background:var(--band);color:var(--band-ink);padding-top:env(safe-area-inset-top)}
+header .wrap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:14px 10px}
+header h1{font-size:1.3rem;font-weight:700}
+.who{font-size:.85rem;color:var(--band-muted);text-align:right;line-height:1.3}
+.who b{color:var(--band-ink);font-weight:600;display:block}
+nav{background:var(--band);position:sticky;top:0;z-index:5}
+nav .wrap{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav .wrap::-webkit-scrollbar{display:none}
+.tab{appearance:none;border:0;background:none;color:var(--band-muted);padding:9px 12px 11px;font-family:var(--display);font-weight:600;font-size:.95rem;border-bottom:3px solid transparent;white-space:nowrap;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--band-ink);border-bottom-color:var(--band-ink)}
+.tab .count{display:inline-block;margin-left:5px;padding:0 6px;border-radius:99px;background:var(--wait);color:#1b1300;font-size:.75rem;font-family:var(--body)}
+main{padding-block:18px calc(48px + env(safe-area-inset-bottom))}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.stack{display:flex;flex-direction:column;gap:14px}
+label.f{display:flex;flex-direction:column;gap:4px;font-size:.88rem;color:var(--muted);font-weight:500}
+input[type=text],input[type=date],input[type=month],input[type=number],select,textarea{background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 11px;color:var(--ink);width:100%;min-width:0;font-size:16px}
+input:disabled,select:disabled{opacity:.5}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.row2>*,.row3>*{min-width:0}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border:0;margin:0;padding:0}
+.seg legend{font-size:.88rem;color:var(--muted);font-weight:500;margin-bottom:4px;padding:0}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{display:flex;flex-direction:column;align-items:center;padding:10px 4px;border:1px solid var(--line);border-radius:8px;background:var(--bg);font-weight:600;text-align:center;cursor:pointer}
+.seg label small{font-weight:400;color:var(--muted);font-size:.76rem}
+.seg input:checked+label{border-color:var(--tc);color:var(--tc);background:color-mix(in srgb,var(--tc) 12%,var(--surface))}
+.btn{appearance:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:10px 16px;font-weight:600;cursor:pointer;font-size:.95rem;line-height:1.3}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.ok{background:var(--ok);border-color:var(--ok);color:var(--surface)}
+.btn.no{color:var(--bad);border-color:color-mix(in srgb,var(--bad) 45%,var(--line))}
+.btn.ghost{background:none;border-color:transparent;color:var(--muted);padding:6px 8px}
+.btn.wide{width:100%}
+.btn:disabled{opacity:.5}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btnrow .btn{flex:1}
+.preview{background:var(--sunk);border-radius:8px;padding:10px 12px;font-size:.9rem;display:flex;flex-direction:column;gap:3px}
+.preview .big{font-family:var(--display);font-size:1.15rem;font-weight:600}
+.hint{color:var(--muted);font-size:.85rem;margin:0}
+.warn{color:var(--wait);font-weight:500}
+.err{color:var(--bad);font-weight:500}
+.t-sick{--tc:var(--sick)} .t-personal{--tc:var(--personal)} .t-vacation{--tc:var(--vacation)}
+
+.ledger{display:flex;flex-direction:column;gap:12px}
+.q{display:grid;grid-template-columns:82px minmax(0,1fr) auto;gap:10px;align-items:center}
+.q .nm{font-weight:600;color:var(--tc)}
+.bar{height:9px;border-radius:99px;background:var(--sunk);overflow:hidden;display:flex}
+.bar i{height:100%;background:var(--tc)}
+.bar i.p{background:repeating-linear-gradient(135deg,var(--tc) 0 3px,transparent 3px 6px);opacity:.75}
+.q .left{font-size:.85rem;color:var(--muted);white-space:nowrap}
+.q .left b{font-family:var(--display);font-size:1.1rem;color:var(--ink)}
+.low{color:var(--bad)!important}
+
+.slip{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:6px}
+.slip .head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.slip .head strong{font-family:var(--display);font-size:1.05rem;font-weight:600}
+.pill{display:inline-block;font-size:.78rem;font-weight:600;padding:1px 9px;border-radius:99px;color:var(--tc);background:color-mix(in srgb,var(--tc) 14%,transparent)}
+.st{font-size:.78rem;font-weight:600;padding:1px 9px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.st.pending{color:var(--wait)} .st.approved{color:var(--ok)} .st.rejected,.st.cancelled{color:var(--bad)}
+.st.cancelled{color:var(--muted)}
+.stamp{font-family:var(--display);font-weight:700;font-size:.9rem;letter-spacing:.05em;padding:1px 10px;border:2.5px solid currentColor;border-radius:6px;transform:rotate(-5deg);white-space:nowrap}
+.stamp.approved{color:var(--ok)} .stamp.rejected{color:var(--bad)} .stamp.cancelled{color:var(--muted)}
+.reason{margin:0;overflow-wrap:anywhere}
+.meta{font-size:.82rem;color:var(--muted)}
+.note{font-size:.86rem;padding:6px 10px;border-radius:6px;background:var(--sunk);overflow-wrap:anywhere}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:10px;padding:26px 18px;text-align:center;color:var(--muted)}
+.empty strong{display:block;color:var(--ink);font-family:var(--display);margin-bottom:4px}
+.sechead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.daygrp{display:flex;flex-direction:column;gap:6px}
+.daygrp h3{font-size:.95rem;font-weight:600;display:flex;gap:8px;align-items:baseline}
+.daygrp h3 small{color:var(--bad);font-family:var(--body);font-weight:500}
+.ev{display:flex;justify-content:space-between;gap:8px;padding:7px 10px;border-radius:6px;border-left:4px solid var(--tc);background:color-mix(in srgb,var(--tc) 10%,var(--surface));font-size:.92rem}
+.ev.pending{background:var(--surface);border:1px dashed var(--tc);border-left:4px solid var(--tc)}
+.tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.88rem}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--surface)}
+th{background:var(--sunk);color:var(--muted);font-size:.78rem;font-weight:600}
+th:first-child{background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+th.g{text-align:center;color:var(--tc)}
+.center{min-height:60vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;padding:24px}
+.spinner{width:28px;height:28px;border:3px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:3s}}
+.check{display:flex;align-items:center;gap:8px;font-weight:500}
+.check input{width:20px;height:20px}
+#toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:8px;font-weight:500;max-width:calc(100% - 32px);z-index:20;box-shadow:0 6px 24px rgba(0,0,0,.2)}
+#toast.bad{background:var(--bad);color:#fff}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>ใบลาออนไลน์</h1><div class="who" id="who"></div></div></header>
+<nav id="nav" hidden><div class="wrap" role="tablist" id="tabs"></div></nav>
+<main class="wrap" id="app"><div class="center"><div class="spinner"></div><p class="hint">กำลังเปิด…</p></div></main>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+const TYPES = {sick:{label:'ลาป่วย'}, personal:{label:'ลากิจ'}, vacation:{label:'ลาพักร้อน'}};
+const TKEYS = Object.keys(TYPES);
+const STATUS = {pending:'รออนุมัติ', approved:'อนุมัติแล้ว', rejected:'ไม่อนุมัติ', cancelled:'ยกเลิก'};
+const TH_M = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+const TH_MF = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+const TH_D = ['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const iso = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse = s => { const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); };
+const thDate = (s, yr=true) => { const d = parse(s); return `${d.getDate()} ${TH_M[d.getMonth()]}${yr ? ' ' + String(d.getFullYear()+543).slice(-2) : ''}`; };
+const fmtN = n => String(Math.round(n*2)/2);
+const stamp = s => { const m = String(s||'').match(/^(\d{4})-(\d{2})-(\d{2})(?: (\d{2}:\d{2}))?/); return m ? thDate(`${m[1]}-${m[2]}-${m[3]}`) + (m[4] ? ' ' + m[4] + ' น.' : '') : esc(s); };
+function rangeText(l){
+  if (l.start === l.end) return thDate(l.start) + (l.half === 'am' ? ' · ครึ่งเช้า' : l.half === 'pm' ? ' · ครึ่งบ่าย' : '');
+  return `${thDate(l.start, l.start.slice(0,4) !== l.end.slice(0,4))} – ${thDate(l.end)}`;
+}
+
+const S = { me:null, tab:'req', idToken:null, cache:{}, calYm:null, repYm:null, notes:{} };
+
+/* ---------- เชื่อมต่อ ---------- */
+let toastT;
+function toast(msg, bad){ const t = $('#toast'); t.textContent = msg; t.className = bad ? 'bad' : ''; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, bad ? 5000 : 2600); }
+
+async function api(action, data = {}){
+  let res;
+  try {
+    res = await fetch(CONFIG.API_URL, { method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body: JSON.stringify({action, idToken:S.idToken, ...data}) });
+  } catch(e){ throw Object.assign(new Error('เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ตรวจสอบอินเทอร์เน็ตแล้วลองใหม่'), {code:'network'}); }
+  let j; try { j = await res.json(); } catch(e){ throw Object.assign(new Error('เซิร์ฟเวอร์ตอบกลับผิดรูปแบบ ผู้ดูแลควรตรวจการ Deploy ของ Apps Script'), {code:'server'}); }
+  if (!j.ok){
+    if (j.code === 'auth') showFatal(j.error, true);
+    throw Object.assign(new Error(j.error || 'เกิดข้อผิดพลาด'), {code:j.code});
+  }
+  return j.data;
+}
+async function run(btn, fn){
+  if (btn) btn.disabled = true;
+  try { return await fn(); }
+  catch(e){ if (e.code !== 'auth') toast(e.message, true); }
+  finally { if (btn) btn.disabled = false; }
+}
+function showFatal(msg, relogin){
+  $('#nav').hidden = true;
+  $('#app').innerHTML = `<div class="center"><h2>เปิดระบบไม่สำเร็จ</h2><p class="hint">${esc(msg)}</p>${relogin ? '<button class="btn primary" id="relogin">เข้าสู่ระบบใหม่</button>' : ''}</div>`;
+  if (relogin) $('#relogin').onclick = () => { try { liff.logout(); } catch(e){} location.reload(); };
+}
+
+async function boot(){
+  if (CONFIG.LIFF_ID.startsWith('ใส่') || CONFIG.API_URL.startsWith('ใส่')) return showFatal('ผู้ดูแลยังไม่ได้ใส่ LIFF_ID และ API_URL ในไฟล์ index.html');
+  try { await liff.init({ liffId: CONFIG.LIFF_ID }); }
+  catch(e){ return showFatal('เริ่ม LIFF ไม่สำเร็จ: ' + (e.message || e)); }
+  if (!liff.isLoggedIn()) { liff.login({ redirectUri: location.href }); return; }
+  S.idToken = liff.getIDToken();
+  if (!S.idToken) return showFatal('ไม่ได้รับ ID token — ผู้ดูแลต้องเปิด scope “openid” ในการตั้งค่า LIFF app', true);
+  await loadMe();
+}
+async function loadMe(){
+  try { S.me = await api('me'); }
+  catch(e){ if (e.code !== 'auth') showFatal(e.message); return; }
+  renderShell();
+}
+
+/* ---------- โครงหน้า ---------- */
+const apprLabel = () => S.me.isApprover ? 'อนุมัติ' : 'ติดตามใบลา';
+const roleLabel = m => m.isApprover ? 'หัวหน้า' : m.isSecretary ? 'เลขา/HR' : '';
+function tabsFor(){
+  const t = [['req','ยื่นลา'],['mine','ใบลาของฉัน'],['cal','ปฏิทิน']];
+  if (S.me.canFileForOthers) t.push(['appr', apprLabel()],['staff','พนักงาน'],['rep','สรุป']);
+  return t;
+}
+function renderShell(){
+  const m = S.me;
+  $('#who').innerHTML = m.registered ? `<b>${esc(m.employee.name)}</b>${roleLabel(m) || esc(m.employee.dept || 'พนักงาน')}` : '';
+  if (!m.registered) return renderRegister();
+  if (!m.active){ $('#nav').hidden = true; $('#app').innerHTML = `<div class="center"><h2>รอเปิดใช้งาน</h2><p class="hint">ลงทะเบียนเรียบร้อยแล้ว รอเลขา/HR หรือหัวหน้าเปิดใช้งานบัญชีของคุณ แล้วกลับมาเปิดหน้านี้อีกครั้ง</p><button class="btn" id="again">ตรวจสอบอีกครั้ง</button></div>`; $('#again').onclick = loadMe; return; }
+  const hash = location.hash.slice(1);
+  if (tabsFor().some(([k]) => k === hash)) S.tab = hash;
+  if (!tabsFor().some(([k]) => k === S.tab)) S.tab = 'req';
+  $('#nav').hidden = false;
+  $('#tabs').innerHTML = tabsFor().map(([k,l]) => `<button class="tab" role="tab" data-tab="${k}" id="tab-${k}">${l}</button>`).join('');
+  $('#tabs').onclick = e => { const b = e.target.closest('.tab'); if (b) go(b.dataset.tab); };
+  go(S.tab);
+  if (m.canFileForOthers) refreshBadge();
+}
+function go(tab){
+  S.tab = tab;
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === tab));
+  $('#app').onclick = $('#app').oninput = null;
+  VIEWS[tab]();
+  window.scrollTo(0, 0);
+}
+async function refreshBadge(){
+  try { const d = await api('pending'); S.cache.pending = d; setBadge(d.pending.length); } catch(e){}
+}
+function setBadge(n){ const t = $('#tab-appr'); if (t) t.innerHTML = `${apprLabel()}${n ? `<span class="count num">${n}</span>` : ''}`; }
+const loading = () => `<div class="center" style="min-height:30vh"><div class="spinner"></div></div>`;
+
+/* ---------- ลงทะเบียน ---------- */
+function renderRegister(){
+  $('#nav').hidden = true;
+  $('#app').innerHTML = `<form class="panel" id="fReg" novalidate>
+    <h2>ลงทะเบียนพนักงาน</h2>
+    <p class="hint">${S.me.firstUser ? 'คุณเป็นคนแรกของระบบ จะได้สิทธิ์หัวหน้า (ผู้อนุมัติ) ทันที' : 'หลังลงทะเบียน เลขา/HR จะได้รับแจ้งและเปิดใช้งานบัญชีให้'}</p>
+    <label class="f" for="gName">ชื่อ-นามสกุล<input type="text" id="gName" maxlength="80" value="${esc(S.me.lineName)}" autocomplete="name"></label>
+    <label class="f" for="gDept">แผนก / สาขา<input type="text" id="gDept" maxlength="60" placeholder="เช่น ครัว, คลังสินค้า"></label>
+    <button class="btn primary wide" type="submit" id="gBtn">ลงทะเบียน</button>
+  </form>`;
+  $('#fReg').onsubmit = e => { e.preventDefault(); run($('#gBtn'), async () => {
+    const name = $('#gName').value.trim(); if (!name) return toast('ใส่ชื่อ-นามสกุลก่อน', true);
+    S.me = await api('register', {name, dept:$('#gDept').value}); toast('ลงทะเบียนแล้ว'); renderShell();
+  }); };
+}
+
+/* ---------- ยื่นลา ---------- */
+const VIEWS = {};
+/* ยื่นในนามของ: ตัวเอง หรือพนักงานที่เลือก (เลขา/หัวหน้า) */
+S.forId = '';
+function target(){
+  if (S.forId && S.me.staff){ const s = S.me.staff.find(x => x.userId === S.forId); if (s) return Object.assign({self:false}, s); }
+  return {self:true, userId:S.me.employee.userId, name:S.me.employee.name, quotas:S.me.employee.quotas, usage:S.me.usage};
+}
+VIEWS.req = () => {
+  const m = S.me, today = m.today, others = (m.staff || []).filter(s => s.userId !== m.employee.userId);
+  if (S.forId && !others.some(s => s.userId === S.forId)) S.forId = '';
+  $('#app').innerHTML = `<div class="stack">
+  <form class="panel" id="fReq" novalidate>
+    <h2>ยื่นใบลา</h2>
+    ${m.canFileForOthers ? `<label class="f" for="rFor">ยื่นในนามของ<select id="rFor"><option value="">ตัวเอง (${esc(m.employee.name)})</option>${others.map(s => `<option value="${esc(s.userId)}"${s.userId === S.forId ? ' selected' : ''}>${esc(s.name)}${s.dept ? ' · ' + esc(s.dept) : ''}</option>`).join('')}</select></label><p class="hint" id="rForHint" hidden></p>` : ''}
+    <fieldset class="seg"><legend>ประเภทการลา</legend>
+      ${TKEYS.map((t,i) => `<input type="radio" name="rType" id="rt-${t}" value="${t}"${i===0?' checked':''}><label for="rt-${t}" class="t-${t}">${TYPES[t].label}<small id="rq-${t}"></small></label>`).join('')}
+    </fieldset>
+    <div class="row2">
+      <label class="f" for="rStart">ตั้งแต่วันที่<input type="date" id="rStart" value="${today}"></label>
+      <label class="f" for="rEnd">ถึงวันที่<input type="date" id="rEnd" value="${today}"></label>
+    </div>
+    <label class="f" for="rHalf">ช่วงเวลา<select id="rHalf"><option value="full">เต็มวัน</option><option value="am">ครึ่งวันเช้า</option><option value="pm">ครึ่งวันบ่าย</option></select></label>
+    <label class="f" for="rReason">เหตุผล<textarea id="rReason" rows="3" maxlength="500" placeholder="เช่น ไปพบแพทย์ตามนัด"></textarea></label>
+    <div class="preview" id="rPrev"></div>
+    <button class="btn primary wide" type="submit" id="rBtn">ส่งใบลา</button>
+  </form>
+  <div class="panel" id="rLedger"></div>
+  </div>`;
+  const f = $('#fReq');
+  f.oninput = f.onchange = e => { if (e && e.target && e.target.id === 'rFor'){ S.forId = e.target.value; drawTarget(); } preview(); };
+  drawTarget(); preview();
+  f.onsubmit = e => { e.preventDefault(); run($('#rBtn'), async () => {
+    const v = reqVals(), c = reqCheck(v), t = target();
+    if (c.error) return toast(c.error, true);
+    const r = await api('submit', Object.assign({}, v, {forUserId: t.self ? '' : t.userId}));
+    const who = r.onBehalf ? `ยื่นใบลาให้ ${t.name} แล้ว` : 'ส่งใบลาแล้ว';
+    toast(r.bossInstant ? `${who} · แจ้งหัวหน้าแล้ว` : `${who} · หัวหน้าจะเห็นในสรุปเช้า ${r.digestHour}:00 น.`);
+    S.me = await api('me'); S.cache.mine = null;
+    if (r.onBehalf){ S.forId = ''; go('appr'); } else go('mine');
+  }); };
+};
+function drawTarget(){
+  const t = target(), m = S.me, w = (x, q) => q ? Math.min(100, x/q*100) : 0;
+  TKEYS.forEach(k => $('#rq-' + k).textContent = `สิทธิ์ ${fmtN(t.quotas[k])} วัน`);
+  const h = $('#rForHint');
+  if (h){ h.hidden = t.self; h.textContent = `ระบบจะแจ้ง ${t.name} ทาง LINE ว่ามีใบลาในชื่อของเขา · ยื่นย้อนหลังได้ไม่เกิน 60 วัน`; }
+  $('#rBtn').textContent = t.self ? 'ส่งใบลา' : `ส่งใบลาให้ ${t.name}`;
+  $('#rLedger').innerHTML = `<h2>สิทธิ์ลาคงเหลือ${t.self ? '' : 'ของ ' + esc(t.name)} ปี ${m.year + 543}</h2><div class="ledger">${TKEYS.map(k => {
+    const q = t.quotas[k], u = t.usage[k], left = q - u.used - u.pending;
+    return `<div class="q t-${k}"><span class="nm">${TYPES[k].label}</span><div class="bar"><i style="width:${w(u.used,q)}%"></i><i class="p" style="width:${w(u.pending,q)}%"></i></div><span class="left num"><b class="${left<0?'low':''}">${fmtN(left)}</b> / ${fmtN(q)}</span></div>`;
+  }).join('')}</div><p class="hint">แถบทึบ = อนุมัติแล้ว · แถบลาย = รออนุมัติ</p>`;
+}
+const hset = () => new Set((S.me.holidays || []).map(h => h.date));
+function countDays(start, end, half){
+  if (!start || !end || end < start) return 0;
+  const hs = hset(), wd = d => d.getDay() !== 0 && d.getDay() !== 6 && !hs.has(iso(d));
+  if (half !== 'full') return wd(parse(start)) ? 0.5 : 0;
+  let n = 0; for (let d = parse(start); iso(d) <= end; d.setDate(d.getDate()+1)) if (wd(d)) n++;
+  return n;
+}
+function reqVals(){
+  const start = $('#rStart').value, end = $('#rEnd').value;
+  return { type: document.querySelector('input[name=rType]:checked').value, start, end, half: start === end ? $('#rHalf').value : 'full', reason: $('#rReason').value.trim() };
+}
+function reqCheck(v){
+  if (!v.start || !v.end) return {error:'ระบุวันที่ให้ครบ'};
+  if (v.end < v.start) return {error:'วันสุดท้ายต้องไม่ก่อนวันเริ่มลา'};
+  const days = countDays(v.start, v.end, v.half);
+  if (!days) return {error:'ช่วงนี้ไม่มีวันทำงาน (เสาร์-อาทิตย์หรือวันหยุด)'};
+  return {days};
+}
+function preview(){
+  const v = reqVals(); $('#rHalf').disabled = v.start !== v.end;
+  const c = reqCheck(v), p = $('#rPrev');
+  if (c.error){ p.innerHTML = `<span class="err">${esc(c.error)}</span>`; return; }
+  const t = target(), q = t.quotas[v.type], u = t.usage[v.type], left = q - u.used - u.pending;
+  p.innerHTML = `<span class="big num">${fmtN(c.days)} วันทำการ</span><span class="hint">ไม่นับเสาร์-อาทิตย์และวันหยุดบริษัท</span>` +
+    (v.start.slice(0,4) == S.me.year && c.days > left ? `<span class="warn">เกินสิทธิ์${TYPES[v.type].label}คงเหลือ (${fmtN(Math.max(0,left))} วัน) ยังส่งได้ หัวหน้าจะเห็นคำเตือน</span>` : '');
+}
+
+/* ---------- ใบลาของฉัน ---------- */
+VIEWS.mine = async () => {
+  $('#app').innerHTML = loading();
+  await run(null, async () => { S.cache.mine = await api('myLeaves'); });
+  if (S.tab !== 'mine') return;
+  drawMine();
+};
+function drawMine(){
+  const list = S.cache.mine || [];
+  $('#app').innerHTML = list.length ? `<div class="stack">${list.map(l => `
+    <article class="slip">
+      <div class="head"><div><span class="pill t-${l.type}">${TYPES[l.type].label}</span></div>${l.status === 'pending' ? `<span class="st pending">รออนุมัติ</span>` : `<span class="stamp ${l.status}">${STATUS[l.status]}</span>`}</div>
+      <div class="num"><b>${esc(rangeText(l))}</b> · ${fmtN(l.days)} วัน</div>
+      ${l.reason ? `<p class="reason">${esc(l.reason)}</p>` : ''}
+      <div class="meta">ยื่นเมื่อ ${stamp(l.createdAt)}${l.submittedBy ? ` · ${esc(l.submittedBy)}ยื่นแทน` : ''}${l.decidedBy && l.status !== 'pending' ? ` · โดย ${esc(l.decidedBy)}` : ''}</div>
+      ${l.note ? `<div class="note">หมายเหตุ: ${esc(l.note)}</div>` : ''}
+      ${l.status === 'pending' ? `<div class="btnrow"><button class="btn ghost" data-cancel="${esc(l.id)}">ยกเลิกใบลานี้</button></div>` : ''}
+    </article>`).join('')}</div>`
+    : `<div class="empty"><strong>ยังไม่มีใบลา</strong>ใบลาที่ยื่นจะแสดงที่นี่พร้อมสถานะ</div>`;
+  $('#app').onclick = e => {
+    const b = e.target.closest('[data-cancel]'); if (!b) return;
+    if (b.dataset.confirm !== '1'){ b.dataset.confirm = '1'; b.textContent = 'แตะอีกครั้งเพื่อยืนยัน'; b.className = 'btn no'; return; }
+    run(b, async () => { S.cache.mine = await api('cancel', {id:b.dataset.cancel}); S.me = await api('me'); toast('ยกเลิกใบลาแล้ว'); drawMine(); });
+  };
+}
+
+/* ---------- ปฏิทิน ---------- */
+VIEWS.cal = async () => {
+  S.calYm = S.calYm || S.me.today.slice(0,7);
+  const [y,m] = S.calYm.split('-').map(Number);
+  $('#app').onclick = null;
+  $('#app').innerHTML = `<div class="stack"><div class="sechead"><button class="btn" id="cPrev" aria-label="เดือนก่อน">‹</button><h2>${TH_MF[m-1]} ${y+543}</h2><button class="btn" id="cNext" aria-label="เดือนถัดไป">›</button></div><div id="cBody">${loading()}</div></div>`;
+  const shift = n => { const d = new Date(y, m-1+n, 1); S.calYm = iso(d).slice(0,7); VIEWS.cal(); };
+  $('#cPrev').onclick = () => shift(-1); $('#cNext').onclick = () => shift(1);
+  let d; await run(null, async () => { d = await api('month', {ym:S.calYm}); });
+  if (!d || S.tab !== 'cal' || d.ym !== S.calYm) return;
+  const last = new Date(y, m, 0).getDate(), hol = new Map(d.holidays.map(h => [h.date, h.name])), groups = [];
+  for (let i = 1; i <= last; i++){
+    const ds = `${S.calYm}-${pad(i)}`, dt = parse(ds), we = dt.getDay() === 0 || dt.getDay() === 6;
+    const evs = we || hol.has(ds) ? [] : d.leaves.filter(l => l.start <= ds && l.end >= ds);
+    if (evs.length || hol.has(ds)) groups.push(`<div class="daygrp"><h3 class="num">${TH_D[dt.getDay()]} ${i} ${TH_M[m-1]}${hol.has(ds) ? `<small>${esc(hol.get(ds))}</small>` : ''}</h3>${evs.map(l =>
+      `<div class="ev t-${l.type}${l.status==='pending'?' pending':''}"><span>${esc(l.name)}${l.half !== 'full' ? ' (ครึ่งวัน)' : ''}</span><span style="color:var(--tc);font-weight:600">${TYPES[l.type].label}${l.status==='pending' ? ' · รอ' : ''}</span></div>`).join('')}</div>`);
+  }
+  $('#cBody').innerHTML = groups.length ? `<div class="stack">${groups.join('')}</div><p class="hint" style="margin-top:12px">เส้นประ = รออนุมัติ · ไม่แสดงเสาร์-อาทิตย์</p>` : `<div class="empty"><strong>ไม่มีใครลาในเดือนนี้</strong>วันลาที่อนุมัติหรือรออนุมัติจะแสดงที่นี่</div>`;
+};
+
+/* ---------- อนุมัติ ---------- */
+VIEWS.appr = async () => {
+  $('#app').onclick = null;
+  $('#app').innerHTML = loading();
+  await run(null, async () => { S.cache.pending = await api('pending'); });
+  if (S.tab !== 'appr') return;
+  drawAppr();
+};
+function drawAppr(){
+  const d = S.cache.pending; if (!d) return;
+  setBadge(d.pending.length);
+  const q = d.quota || {}, can = d.canDecide;
+  $('#app').innerHTML = `<div class="stack">
+    ${d.inactive ? `<div class="panel" style="flex-direction:row;justify-content:space-between;align-items:center"><span>มีพนักงานรอเปิดใช้งาน <b>${d.inactive}</b> คน</span><button class="btn" data-go="staff">จัดการ</button></div>` : ''}
+    <p class="hint">${d.bossInstant ? (can ? `คุณได้รับการ์ดใบลาใหม่ทันทีทุกใบ และสรุปตอนเช้า ${d.digestHour}:00 น. ในวันที่มีคนลา · พิมพ์ “สรุป” ในแชตเพื่อดูสรุปตอนนี้` : `หัวหน้าได้รับการ์ดใบลาใหม่ทันทีทุกใบ และเป็นผู้อนุมัติ`) : (can ? `คุณได้รับสรุปการลาตอนเช้า ${d.digestHour}:00 น. · พิมพ์ “สรุป” ในแชตเพื่อดูสรุปตอนนี้` : `หัวหน้าเป็นผู้อนุมัติ และได้รับสรุปตอนเช้า ${d.digestHour}:00 น. ถ้าเรื่องด่วน กด “แจ้งหัวหน้าทันที”`)}</p>
+    <h2>รออนุมัติ (${d.pending.length})</h2>
+    ${d.pending.length ? d.pending.map(l => `
+      <article class="slip">
+        <div class="head"><strong>${esc(l.name)}</strong><span class="pill t-${l.type}">${TYPES[l.type].label}</span></div>
+        <div class="num"><b>${esc(rangeText(l))}</b> · ${fmtN(l.days)} วัน</div>
+        ${l.reason ? `<p class="reason">${esc(l.reason)}</p>` : ''}
+        ${l.remainingAfter < 0 ? `<div class="err">เกินสิทธิ์${TYPES[l.type].label} ${fmtN(-l.remainingAfter)} วัน</div>` : `<div class="meta">หลังอนุมัติจะเหลือสิทธิ์ ${fmtN(l.remainingAfter)} วัน</div>`}
+        <div class="meta">ยื่นเมื่อ ${stamp(l.createdAt)}${l.submittedBy ? ` · ${esc(l.submittedBy)}ยื่นแทน` : ''}</div>
+        ${can ? `<input type="text" data-note="${esc(l.id)}" id="note-${esc(l.id)}" placeholder="หมายเหตุถึงพนักงาน (ถ้ามี)" value="${esc(S.notes[l.id] || '')}" aria-label="หมายเหตุ">
+        <div class="btnrow"><button class="btn ok" data-d="approved" data-id="${esc(l.id)}">อนุมัติ</button><button class="btn no" data-d="rejected" data-id="${esc(l.id)}">ไม่อนุมัติ</button></div>`
+        : (d.bossInstant ? '' : `<div class="btnrow"><button class="btn" data-nudge="${esc(l.id)}">🔔 แจ้งหัวหน้าทันที</button></div>`)}
+      </article>`).join('') : `<div class="empty"><strong>ไม่มีใบลารออนุมัติ</strong>${can && !d.bossInstant ? 'ใบลาใหม่จะอยู่ในสรุปตอนเช้า' : 'ใบลาใหม่จะแจ้งเข้ามาทาง LINE'}</div>`}
+    <h2 style="margin-top:8px">ตัดสินล่าสุด</h2>
+    ${d.recent.length ? d.recent.map(l => `
+      <article class="slip">
+        <div class="head"><strong>${esc(l.name)}</strong><span class="stamp ${l.status}">${STATUS[l.status]}</span></div>
+        <div class="num"><span class="pill t-${l.type}">${TYPES[l.type].label}</span> ${esc(rangeText(l))} · ${fmtN(l.days)} วัน</div>
+        <div class="meta">โดย ${esc(l.decidedBy)}</div>
+        ${l.note ? `<div class="note">${esc(l.note)}</div>` : ''}
+        ${can && l.status === 'approved' ? `<div class="btnrow"><button class="btn ghost" data-d="cancelled" data-id="${esc(l.id)}">ยกเลิกการลานี้</button></div>` : ''}
+      </article>`).join('') : `<p class="hint">ยังไม่มี</p>`}
+    <p class="hint">ข้อความแจ้งเตือนเดือนนี้: ${q.used != null ? `ใช้ไป ${q.used}${q.limit != null ? ` จาก ${q.limit}` : ''} ข้อความ` : 'อ่านไม่ได้'} · การตอบกลับในแชตไม่นับโควตา</p>
+  </div>`;
+  $('#app').oninput = e => { if (e.target.dataset.note) S.notes[e.target.dataset.note] = e.target.value; };
+  $('#app').onclick = e => {
+    const g = e.target.closest('[data-go]'); if (g) return go(g.dataset.go);
+    const n = e.target.closest('[data-nudge]');
+    if (n) return run(n, async () => { const r = await api('nudge', {id:n.dataset.nudge}); toast(`ส่งถึงหัวหน้า ${r.sent} คนแล้ว`); n.textContent = '✓ แจ้งหัวหน้าแล้ว'; n.dataset.nudge = ''; setTimeout(() => n.disabled = true); });
+    const b = e.target.closest('[data-d]'); if (!b) return;
+    if (b.dataset.d === 'cancelled' && b.dataset.confirm !== '1'){ b.dataset.confirm = '1'; b.textContent = 'แตะอีกครั้งเพื่อยืนยัน'; b.className = 'btn no'; return; }
+    run(b, async () => {
+      const r = await api('decide', {id:b.dataset.id, decision:b.dataset.d, note:S.notes[b.dataset.id] || ''});
+      delete S.notes[b.dataset.id]; S.cache.pending = r;
+      toast(r.notified ? 'บันทึกแล้ว แจ้งพนักงานและเลขาทาง LINE แล้ว' : 'บันทึกแล้ว (แจ้งทาง LINE ไม่สำเร็จ พนักงานดูสถานะได้ในเมนู)');
+      drawAppr();
+    });
+  };
+}
+
+/* ---------- พนักงาน ---------- */
+VIEWS.staff = async () => {
+  $('#app').onclick = $('#app').oninput = null;
+  $('#app').innerHTML = loading();
+  let list; await run(null, async () => { list = await api('employees'); });
+  if (!list || S.tab !== 'staff') return;
+  drawStaff(list);
+};
+function drawStaff(list){
+  const boss = S.me.isApprover;
+  const roleOpt = (v, cur) => `<option value="${v}"${v === cur ? ' selected' : ''}>${{employee:'พนักงาน', secretary:'เลขา/HR', approver:'หัวหน้า'}[v]}</option>`;
+  $('#app').innerHTML = `<div class="stack"><p class="hint">พนักงานใหม่ลงทะเบียนเองผ่านลิงก์ของ LINE OA แล้วรอเปิดใช้งานที่นี่ ค่าตั้งต้นของสิทธิ์ลาใช้ขั้นต่ำตามกฎหมายแรงงาน ปรับได้รายคน${boss ? '' : ' · บทบาทและข้อมูลของหัวหน้า แก้ได้เฉพาะหัวหน้า'}</p>
+  ${list.map(e => { const lock = !boss && e.role === 'approver'; return `<form class="panel" data-uid="${esc(e.userId)}" novalidate>
+    <div class="sechead"><strong style="font-family:var(--display);font-size:1.05rem">${esc(e.name)}</strong>${e.active ? '' : '<span class="st pending">รอเปิดใช้งาน</span>'}</div>
+    <div class="row2"><label class="f">ชื่อ<input type="text" name="name" value="${esc(e.name)}" maxlength="80"${lock ? ' disabled' : ''}></label><label class="f">แผนก<input type="text" name="dept" value="${esc(e.dept)}" maxlength="60"${lock ? ' disabled' : ''}></label></div>
+    <div class="row2"><label class="f">บทบาท<select name="role"${boss ? '' : ' disabled'}>${['employee','secretary','approver'].map(v => roleOpt(v, e.role)).join('')}</select></label>
+      <label class="check" style="align-self:end;padding-bottom:10px"><input type="checkbox" name="active"${e.active?' checked':''}${lock ? ' disabled' : ''}> เปิดใช้งาน</label></div>
+    <div class="row3">${TKEYS.map(t => `<label class="f t-${t}"><span style="color:var(--tc)">${TYPES[t].label}</span><input type="number" name="q_${t}" min="0" max="365" step="0.5" value="${e.quotas[t]}"${lock ? ' disabled' : ''}><span class="hint num">ใช้ไป ${fmtN(e.usage[t].used)}${e.usage[t].pending ? ` · รอ ${fmtN(e.usage[t].pending)}` : ''}</span></label>`).join('')}</div>
+    ${lock ? '' : '<button class="btn primary" type="submit">บันทึก</button>'}
+  </form>`; }).join('')}</div>`;
+  document.querySelectorAll('form[data-uid]').forEach(f => f.onsubmit = ev => { ev.preventDefault(); run(f.querySelector('button'), async () => {
+    const quotas = {}; TKEYS.forEach(t => quotas[t] = Number(f.elements['q_' + t].value));
+    const list2 = await api('saveEmployee', {userId:f.dataset.uid, name:f.elements.name.value, dept:f.elements.dept.value, role:f.elements.role.value, active:f.elements.active.checked, quotas});
+    toast('บันทึกแล้ว'); drawStaff(list2);
+    if (f.dataset.uid === S.me.employee.userId) loadMe();
+  }); });
+}
+
+/* ---------- สรุป ---------- */
+VIEWS.rep = async () => {
+  $('#app').onclick = $('#app').oninput = null;
+  S.repYm = S.repYm || S.me.today.slice(0,7);
+  $('#app').innerHTML = `<div class="stack"><div class="sechead"><h2>สรุปการลารายเดือน</h2><input type="month" id="pYm" value="${S.repYm}" style="width:auto"></div><div id="pBody">${loading()}</div></div>`;
+  $('#pYm').onchange = e => { if (e.target.value){ S.repYm = e.target.value; VIEWS.rep(); } };
+  let d; await run(null, async () => { d = await api('report', {ym:S.repYm}); });
+  if (!d || S.tab !== 'rep' || d.ym !== S.repYm) return;
+  const [y] = d.ym.split('-').map(Number);
+  $('#pBody').innerHTML = (d.rows.length ? `<div class="tscroll"><table>
+    <thead><tr><th rowspan="2">พนักงาน</th>${TKEYS.map(t => `<th class="g t-${t}" colspan="3">${TYPES[t].label}</th>`).join('')}</tr>
+    <tr>${TKEYS.map(() => '<th>เดือนนี้</th><th>ทั้งปี</th><th>เหลือ</th>').join('')}</tr></thead>
+    <tbody>${d.rows.map(r => `<tr><td>${esc(r.name)}</td>${TKEYS.map(t => `<td>${r.month[t] ? fmtN(r.month[t]) : '–'}</td><td>${fmtN(r.yearUsed[t])}</td><td class="${r.remaining[t]<0?'low':''}">${fmtN(r.remaining[t])}</td>`).join('')}</tr>`).join('')}</tbody>
+  </table></div>` : `<div class="empty"><strong>ยังไม่มีข้อมูล</strong></div>`) +
+  `<p class="hint" style="margin-top:10px">นับเฉพาะใบลาที่อนุมัติแล้ว เป็นวันทำการ · “ทั้งปี” คือปี ${y+543}</p>
+   <p class="hint">ข้อมูลทั้งหมดอยู่ใน Google Sheet ดาวน์โหลดเป็น Excel ได้จากเมนู ไฟล์ › ดาวน์โหลด<br><a href="${esc(d.sheetUrl)}" target="_blank" rel="noopener">เปิด Google Sheet</a></p>`;
+};
+
+boot();
+</script>
+</body>
+</html>
